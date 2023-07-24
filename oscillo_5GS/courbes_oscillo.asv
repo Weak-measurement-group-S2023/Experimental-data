@@ -1,0 +1,63 @@
+%% Initialisation
+
+clear all 
+close all
+
+%Couleur
+newcolors = [0 0.4470 0.7410
+             0.83 0.14 0.14
+             1.00 0.54 0.00
+             0.47 0.25 0.80
+             0.25 0.80 0.54
+             0.3010 0.7450 0.9330];
+         
+colororder(newcolors)
+
+%% Lecture des fichiers et récupération des données
+
+prompt_all = "Combien de courbes souhaitez-vous tracer ? (enter a number) ";
+nombre_courbes = input(prompt_all,"s");
+
+str="%f";
+for i=1:nombre_courbes*2
+    str=str+" %f";
+end
+
+U={};
+Data={};
+pos_max={};
+
+x=linspace(0,10,500);
+
+for i=1:str2double(nombre_courbes)
+    [FileName,PathName] = uigetfile('*.txt','sélectionnez le fichier texte');
+    fid=fopen(fullfile(PathName,FileName),'r');
+    Data = textscan(fid, '%f');
+    fclose(fid);
+    Data(end+1) = {Data{1,1}};
+    U_fit = fit(x(:),Data{1,1},'gauss3');
+    U(end+1)={U_fit};-
+    [x_max,U_max]=max(y_fit);
+    pos_max(end+1)={x_max};
+    %U2=Data{1,1};
+end
+
+delai = pos_max{2}-pos_max{1}
+
+%% Tracé des courbes 
+
+
+
+for k=1:str2double(nombre_courbes)
+    %f=fit(x{k},visibilite{k},'smoothingspline');
+    plot(U{k},x,Data{k});%,'Linestyle','none');
+    hold on;
+    %errorbar(x{k},visibilite{k}, incertitudes_visibilite{k}, 'Color', newcolors(k,:) ,'Marker', 'none', 'LineStyle', 'none' );
+end
+
+title('');
+xlabel('Temps (en ns)');
+ylabel('Tension (en mV)');
+%legend(name_legend);
+grid;
+
