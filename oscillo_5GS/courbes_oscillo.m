@@ -27,8 +27,8 @@ U={};
 donnees_brutes={};
 pos_max={};
 
-x=linspace(0,10,500);
-x2=linspace(0,10,1000);
+x=linspace(0,100,10000);
+x2=linspace(0,100,20000);
 
 for i=1:str2double(nombre_courbes)
     [FileName,PathName] = uigetfile('*.txt','sélectionnez le fichier texte');
@@ -36,16 +36,18 @@ for i=1:str2double(nombre_courbes)
     Data = textscan(fid, '%f');
     fclose(fid);
     donnees_brutes(end+1) = {Data{1,1}};
-    U_fit = fit(x(:),Data{1,1},'gauss3');
-    U_fit_y = gaussienne(U_fit,x2);
+    %U_fit = fit(x(:),Data{1,1},'gauss3');
+    U_fit = polyfit(x(:),smooth(Data{1,1}),11);
+    %U_fit_y = gaussienne(U_fit,x2);
+    U_fit_y = polyval(U_fit,x2);
     U(end+1)={U_fit_y};
     [x_max,ind_max]=max(U_fit_y);
     pos_max(end+1)={x2(ind_max)};
-    U2=Data{1,1};
+    %U2=Data{1,1};
 end
 
 delai1 = pos_max{2}-pos_max{1}
-delai2 = pos_max{4}-pos_max{1}
+delai2 = pos_max{4}-pos_max{3}
 
 
 %% Tracé des courbes 
